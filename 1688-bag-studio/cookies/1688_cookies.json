@@ -1,0 +1,230 @@
+[
+  {
+    "name": "tracknick",
+    "value": "",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "lid",
+    "value": "%E5%8D%8E%E4%B8%BD%E4%B8%BF%E4%B8%80%E6%97%8F",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "ali_apache_track",
+    "value": "c_mid=b2b-1791395275|c_lid=%E5%8D%8E%E4%B8%BD%E4%B8%BF%E4%B8%80%E6%97%8F|c_ms=1",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "inquiry_preference",
+    "value": "webIM",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "_bl_uid",
+    "value": "1emvah2jxwX25j4Ogvdmlh66kvp9",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "cna",
+    "value": "O9RCIJizjzMCAQ4ThWVIvi0Y",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "cbu_mmid",
+    "value": "7E3C55520E991B9B3A7AC442E7373DFE7D1B012C8C5F7C7D3DB90DBBE312E80D09F848C1F03189F222CD52D098667A99EE5C1243E93E015836F0E27E68CFABD9",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "xlly_s",
+    "value": "1",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "cookie1",
+    "value": "URtAv3RWGupJY74MWJSUc5ACYxzXti4O9cf%2FImfzv4M%3D",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "cookie2",
+    "value": "1c70adfc8f5b2d117b9cd2c8ce0c6c7e",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "cookie17",
+    "value": "UoYXLfthX2jRzg%3D%3D",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "sgcookie",
+    "value": "E100abjB2uGg6Bt%2FaUvlcVbQnsVUymIyVW2HjxAFhvo65FrpJ3QdS489JHmc9RPMPKAPtxdN1rSknm80u0%2BWaSfKJFBvLBhntTJYaK6BCUtibXRguk844IMocMgC3%2FpbOQ8s",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "t",
+    "value": "797fb65bec410f9baed66ac1413cb14b",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "_tb_token_",
+    "value": "5077e0eee5d7e",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "sg",
+    "value": "%E6%97%8F52",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "csg",
+    "value": "69f68b03",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "unb",
+    "value": "1791395275",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "uc4",
+    "value": "id4=0%40UO6ezFYU%2FsdybMNxhbxljPPlT4EW&nk4=0%402kfdFg4KqvXXRabdiO2USy7QKGgA",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "_nk_",
+    "value": "%5Cu534E%5Cu4E3D%5Cu4E3F%5Cu4E00%5Cu65CF",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "__cn_logon__",
+    "value": "true",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "__cn_logon_id__",
+    "value": "%E5%8D%8E%E4%B8%BD%E4%B8%BF%E4%B8%80%E6%97%8F",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "ali_apache_tracktmp",
+    "value": "c_w_signed=Y",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "last_mid",
+    "value": "b2b-1791395275",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "_csrf_token",
+    "value": "1776768409831",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "union",
+    "value": "{amug_biz:comad,amug_fl_src:sem_bing,creative_url:https%3A%2F%2Fwww.1688.com%2Fzw%2Fpage.html%3FhpageId%3Dold-sem-pc-list%26keywords%3D%25E5%258C%2585%26cosite%3Dbingjj_pz%26location%3D%26trackid%3D%26spm%3Da312h.2018_new_sem.dh_004.submit%26keywordid%3D%26bt%3D%26exp%3DpcSemFumian%253AC%253BpcDacuIconExp%253AA%253Bsidebar%253AC%253BpcCpxGuessExp%253AB%253Bqztf%253AF%253BpcCpxCpsExp%253AB%253Bwysiwyg%253AB%253BhotBangdanExp%253AB%253BpcSemWwClick%253AA%253BpcSemDownloadPlugin%253AA%253Basst%253AF%26ptid%3D017700000009b119b36a1b9ce8b5e0a7%26sortType%3D%26descendOrder%3D%26province%3D%26city%3D%26priceStart%3D%26priceEnd%3D%26dis%3D%26provinceValue%3D%25E6%2589%2580%25E5%259C%25A8%25E5%259C%25B0%25E5%258C%25BA%26p_rs%3Dtrue,creative_time:1776768436337}",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "leftMenuLastMode",
+    "value": "COLLAPSE",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "leftMenuModeTip",
+    "value": "shown",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "plugin_home_downLoad_cookie",
+    "value": "%E4%B8%8B%E8%BD%BD%E6%8F%92%E4%BB%B6",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "keywordsHistory",
+    "value": "%E5%8C%85%E5%8C%85",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "mtop_partitioned_detect",
+    "value": "1",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "_m_h5_tk",
+    "value": "d55c0404dc6645b7ee047ff235f4e773_1776782988932",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "_m_h5_tk_enc",
+    "value": "1342940d1f19a25e700161c28bbdf4e5",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "JSESSIONID",
+    "value": "AD7A9140935C8FFF7C727A4BFB8AD3F4",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "_user_vitals_session_data_",
+    "value": "{user_line_track:true,ul_session_id:0ymlxirpsfv,last_page_id:detail.1688.com%2Fu9l97sjp0mf}",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "%E5%8D%8E%E4%B8%BD%E4%B8%BF%E4%B8%80%E6%97%8F_floatBotNotHit",
+    "value": "1",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "isg",
+    "value": "BCcnCh68Atkz9ohx4HCMsZ0etlvxrPuO57kCHvmUQ7bd6EeqAXyL3mX6COj2G9MG",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "tfstk",
+    "value": "gtvjl62FGr4fgvmxWrozV9F5oTXsY0kEBls9xhe4XtBAfRtH5nWwXsF82iby3Z-VHFN6ResNkSIY27IGxNUYHsERyaTYQs8ZfPE6wFbw0VqYeuIwz-IA6REDZe-L3KlcQR6cIO3E8vkUmnXGBNM7X0_D23jt4iU4341lIO3E8GnJF96MlUPwnZFR2aj1XoCvW_FRfaITMOLOy_IdYrBOBFn5wMjdDNIOX8KRXaQOBOL920sGyiBOBFK-VGc7e4soGZKjXhdeUMwRynQ7BRp-Is_BD5yTBLsfGdKAPIR2Fi1fJ_cF8eJvzhp2n_c8NOxyOFO9J4PVkBsBP6RjR-TBoGK1XEM3AapXfL1DakyBV1_XwKC7XRKy2NLe1EgbiZd2P6jRwlMh4e7JmKdSjzKv8Z6A2_kKA3C9aKfH34efpBxV3CLKzS7vOGIymJ7BuNN_V621VwoSV5Viu9JO0hv9kgCAqgJEV0abssIlVwoSV5VGMgjPa0i7l5f..",
+    "domain": ".1688.com",
+    "path": "/"
+  },
+  {
+    "name": "taklid",
+    "value": "01349680b70d465e8269d77f3d2af4a4",
+    "domain": ".1688.com",
+    "path": "/"
+  }
+]

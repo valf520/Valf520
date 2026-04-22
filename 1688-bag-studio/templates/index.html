@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1688 箱包数据雷达 · 一键锁定爆款</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👜</text></svg>">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+  <!-- ===== HERO ===== -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="badge">电商数据增长引擎</div>
+      <h1>1688 箱包数据雷达<br>一键锁定爆款货源</h1>
+      <p class="subtitle">输入关键词，智能采集商品信息与属性，自动生成含缩略图的高颜值 Excel 报表</p>
+      <div class="search-bar">
+        <input type="text" id="heroKeyword" placeholder="输入关键词开始采集，如：真皮女包、通勤托特包..." value="包包">
+        <button class="search-icon" id="heroSearchBtn" title="开始采集">&#x1F50D;</button>
+      </div>
+      <div class="cta-row">
+        <span class="mini-note">已缓存 {{ sample_count }} 条样本数据 · 支持导出 Excel</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== MAIN ===== -->
+  <main class="container">
+
+    <!-- 采集工作台 -->
+    <section id="workbench" class="panel">
+      <div class="panel-header">
+        <h2><span class="icon">⚡</span> 采集工作台</h2>
+        <button class="adv-toggle" id="advToggle">
+          <span>高级选项</span>
+          <span id="advArrow">▾</span>
+        </button>
+      </div>
+
+      <form id="scrapeForm">
+        <input type="hidden" name="keyword" id="formKeyword" value="包包">
+        <div class="adv-body" id="advBody">
+          <label>
+            抓取页数（1~5）
+            <input type="number" name="max_pages" value="2" min="1" max="5">
+          </label>
+          <label>
+            最大条数（5~80）
+            <input type="number" name="max_items" value="30" min="5" max="80">
+          </label>
+          <label class="checkbox-wrap">
+            <input type="checkbox" name="assist_mode" value="true">
+            人工辅助首轮校准（打开浏览器手动登录）
+          </label>
+        </div>
+        <button type="submit" style="display:none" id="hiddenSubmit"></button>
+      </form>
+
+      <div id="status" class="status">
+        <div class="spinner"></div>
+        <span id="statusText">等待开始采集...</span>
+      </div>
+
+      <div class="action-row">
+        <button class="btn btn-primary" id="startBtn" type="button">
+          <span class="btn-icon">🚀</span> 开始采集
+        </button>
+        <button class="btn btn-secondary" id="exportBtn" type="button">
+          <span class="btn-icon">📥</span> 下载 Excel（含缩略图）
+        </button>
+      </div>
+    </section>
+
+    <!-- 数据统计 -->
+    <section class="panel" id="statsPanel" style="display:none">
+      <div class="panel-header">
+        <h2><span class="icon">📊</span> 数据概览</h2>
+      </div>
+      <div class="stats" id="statsGrid"></div>
+    </section>
+
+    <!-- 数据预览 -->
+    <section class="panel" id="previewPanel">
+      <div class="panel-header">
+        <h2><span class="icon">🔍</span> 数据预览</h2>
+        <div class="view-toggle" id="viewToggle">
+          <button class="active" data-view="card">卡片</button>
+          <button data-view="table">表格</button>
+        </div>
+      </div>
+      <div id="cardView" class="cards"></div>
+      <div id="tableView" style="display:none"></div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    1688 Bag Studio &middot; 箱包数据采集工具 &middot; 仅供学习研究使用
+  </footer>
+
+  <script>
+    const $ = (s) => document.querySelector(s);
+    const $$ = (s) => document.querySelectorAll(s);
+
+    const heroKeyword = $("#heroKeyword");
+    const formKeyword = $("#formKeyword");
+    const form = $("#scrapeForm");
+    const statusEl = $("#status");
+    const statusText = $("#statusText");
+    const cardView = $("#cardView");
+    const tableView = $("#tableView");
+    const exportBtn = $("#exportBtn");
+    const startBtn = $("#startBtn");
+    const heroSearchBtn = $("#heroSearchBtn");
+    const advToggle = $("#advToggle");
+    const advBody = $("#advBody");
+    const statsPanel = $("#statsPanel");
+    const statsGrid = $("#statsGrid");
+
+    let currentView = "card";
+    let lastData = [];
+
+    function proxyImg(url) {
+      if (!url) return "";
+      if (url.includes("alicdn.com") || url.includes("cbu01") || url.includes("1688")) {
+        return "/api/imgproxy?url=" + encodeURIComponent(url);
+      }
+      return url;
+    }
+
+    const PLACEHOLDER_IMG = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect fill="#16152a" width="200" height="200"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#6b6d80" font-size="40">&#128092;</text></svg>');
+
+    // 同步关键词
+    heroKeyword.addEventListener("input", () => { formKeyword.value = heroKeyword.value; });
+
+    // 高级选项折叠
+    advToggle.addEventListener("click", () => {
+      advBody.classList.toggle("open");
+      $("#advArrow").textContent = advBody.classList.contains("open") ? "▴" : "▾";
+    });
+
+    // 视图切换
+    $$("#viewToggle button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        $$("#viewToggle button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentView = btn.dataset.view;
+        cardView.style.display = currentView === "card" ? "" : "none";
+        tableView.style.display = currentView === "table" ? "" : "none";
+      });
+    });
+
+    // Tag 样式映射
+    function tagClass(key) {
+      if (key === "适用性别") return "tag-gender";
+      if (key === "风格" || key === "箱包潮流款式") return "tag-style";
+      if (key === "材质") return "tag-material";
+      if (key === "箱包大小") return "tag-size";
+      return "";
+    }
+
+    // 渲染卡片
+    function renderCards(items) {
+      if (!items.length) {
+        cardView.innerHTML = '<div class="empty"><div class="empty-icon">📦</div><p>暂无数据，请输入关键词开始采集</p></div>';
+        return;
+      }
+      cardView.innerHTML = "";
+      for (const item of items) {
+        const tags = ["适用性别","风格","材质","箱包大小","箱包潮流款式"]
+          .filter(k => item[k] && item[k] !== "未知")
+          .map(k => `<span class="tag ${tagClass(k)}">${item[k]}</span>`)
+          .join("");
+        const imgSrc = proxyImg(item["图片URL"]);
+        const hasPrice = item["价格"] && item["价格"] !== "未知";
+        const priceDisplay = hasPrice ? item["价格"].replace(/[¥￥元]/g, "") : "";
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="card-img-wrap">
+            <img src="${imgSrc || PLACEHOLDER_IMG}" alt="${item["商品标题"] || ""}" referrerpolicy="no-referrer" loading="lazy" onerror="this.src='${PLACEHOLDER_IMG}'">
+            ${hasPrice ? `<span class="card-price">¥${priceDisplay}</span>` : ""}
+          </div>
+          <div class="card-body">
+            <div class="card-title">${item["商品标题"] || "未识别标题"}</div>
+            ${tags ? `<div class="card-tags">${tags}</div>` : ""}
+            ${item["上市年份季节"] && item["上市年份季节"] !== "未知" ? `<span class="tag">${item["上市年份季节"]}</span>` : ""}
+            <div class="card-footer">
+              <span class="card-shop">${item["店铺名"] || "未知店铺"}</span>
+              <a class="card-link" href="${item["详情网址"] || "#"}" target="_blank" rel="noopener">查看详情 →</a>
+            </div>
+          </div>
+        `;
+        cardView.appendChild(card);
+      }
+    }
+
+    // 渲染表格
+    function renderTable(items) {
+      if (!items.length) {
+        tableView.innerHTML = '<div class="empty"><div class="empty-icon">📦</div><p>暂无数据</p></div>';
+        return;
+      }
+      const cols = ["商品标题","价格","适用性别","箱包大小","风格","箱包潮流款式","材质","上市年份季节","店铺名"];
+      let html = '<div class="table-wrap"><table class="data-table"><thead><tr><th>图片</th>';
+      cols.forEach(c => html += `<th>${c}</th>`);
+      html += '<th>操作</th></tr></thead><tbody>';
+      for (const item of items) {
+        const imgSrc = proxyImg(item["图片URL"]);
+        html += '<tr>';
+        html += `<td>${imgSrc ? `<img class="thumb" src="${imgSrc}" referrerpolicy="no-referrer" loading="lazy" onerror="this.style.display='none'">` : '<span style="color:var(--text-dim)">无图</span>'}</td>`;
+        cols.forEach(c => {
+          const val = item[c] || "未知";
+          html += `<td>${val}</td>`;
+        });
+        html += `<td><a href="${item["详情网址"] || "#"}" target="_blank" rel="noopener">详情</a></td>`;
+        html += '</tr>';
+      }
+      html += '</tbody></table></div>';
+      tableView.innerHTML = html;
+    }
+
+    // 渲染统计
+    function renderStats(items) {
+      if (!items.length) { statsPanel.style.display = "none"; return; }
+      statsPanel.style.display = "";
+      const total = items.length;
+      const withPrice = items.filter(i => i["价格"] && i["价格"] !== "未知").length;
+      const genders = {};
+      const materials = {};
+      items.forEach(i => {
+        const g = i["适用性别"] || "未知"; genders[g] = (genders[g]||0) + 1;
+        const m = i["材质"] || "未知"; materials[m] = (materials[m]||0) + 1;
+      });
+      const topGender = Object.entries(genders).sort((a,b)=>b[1]-a[1])[0];
+      const topMaterial = Object.entries(materials).sort((a,b)=>b[1]-a[1])[0];
+
+      statsGrid.innerHTML = `
+        <div class="stat-card"><div class="stat-num">${total}</div><div class="stat-label">采集总数</div></div>
+        <div class="stat-card"><div class="stat-num">${withPrice}</div><div class="stat-label">含价格</div></div>
+        <div class="stat-card"><div class="stat-num">${topGender ? topGender[0] : "-"}</div><div class="stat-label">主要性别</div></div>
+        <div class="stat-card"><div class="stat-num">${topMaterial ? topMaterial[0] : "-"}</div><div class="stat-label">主要材质</div></div>
+      `;
+    }
+
+    // 采集
+    async function doScrape() {
+      const kw = heroKeyword.value.trim();
+      if (!kw) { statusText.textContent = "请输入关键词"; return; }
+      formKeyword.value = kw;
+
+      statusEl.classList.add("loading");
+      statusText.textContent = "正在采集中，请耐心等待...";
+      startBtn.disabled = true;
+
+      const fd = new FormData(form);
+      try {
+        const resp = await fetch("/api/scrape", { method: "POST", body: fd });
+        const data = await resp.json();
+        if (!resp.ok || !data.ok) {
+          statusText.textContent = data.message || "采集失败，请稍后重试";
+          statusEl.classList.remove("loading");
+          startBtn.disabled = false;
+          return;
+        }
+        lastData = data.preview || [];
+        statusText.textContent = `采集完成：共 ${data.count} 条数据，可直接下载 Excel`;
+        renderCards(lastData);
+        renderTable(lastData);
+        renderStats(lastData);
+      } catch (err) {
+        statusText.textContent = "网络错误，请检查后端服务是否运行";
+      }
+      statusEl.classList.remove("loading");
+      startBtn.disabled = false;
+    }
+
+    startBtn.addEventListener("click", doScrape);
+    heroSearchBtn.addEventListener("click", doScrape);
+    heroKeyword.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); doScrape(); } });
+
+    exportBtn.addEventListener("click", () => { window.location.href = "/api/export"; });
+
+    // 初始空状态
+    renderCards([]);
+  </script>
+</body>
+</html>

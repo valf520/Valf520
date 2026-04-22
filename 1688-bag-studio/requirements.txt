@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+jinja2
+python-multipart
+playwright
+httpx
+beautifulsoup4
+pandas
+openpyxl
+Pillow
+browser-cookie3
