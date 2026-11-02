@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>抖音私信 AI 接待</title>
+<style>
+  body { width: 340px; margin: 0; padding: 12px; font: 12px/1.5 -apple-system, "Segoe UI", sans-serif; color: #1a1a1a; }
+  h4 { margin: 0 0 8px; font-size: 14px; }
+  h5 { margin: 14px 0 6px; font-size: 12px; color: #333; border-top: 1px solid #f0f0f0; padding-top: 10px; }
+  label { display: block; margin: 8px 0 3px; color: #666; font-size: 11px; }
+  input[type=text], input[type=password], input[type=number], textarea {
+    width: 100%; box-sizing: border-box; padding: 6px 8px; border: 1px solid #e3e3e3; border-radius: 6px; font: 12px/1.5 inherit;
+  }
+  textarea { resize: vertical; }
+  .grid { display: flex; gap: 6px; }
+  .grid > * { flex: 1; }
+  .row { display: flex; gap: 8px; margin-top: 10px; }
+  button { flex: 1; padding: 8px; border: 0; border-radius: 7px; font-weight: 600; cursor: pointer; }
+  #save { background: #f2f2f2; color: #333; }
+  #test { background: #4CAF50; color: #fff; }
+  #run { background: #FE2C55; color: #fff; }
+  .mini { padding: 5px; font-size: 11px; font-weight: 500; background: #fff; border: 1px solid #e0e0e0; color: #666; }
+  #out { margin-top: 8px; padding: 8px; background: #fafafa; border: 1px solid #eee; border-radius: 6px; min-height: 34px; color: #333; white-space: pre-wrap; word-break: break-all; font-size: 11px; }
+  .chk { display: flex; align-items: center; gap: 6px; margin-top: 8px; color: #333; }
+  .hint { color: #999; font-size: 11px; margin-top: 6px; }
+  #memBar { margin-top: 6px; font-size: 11px; color: #666; }
+</style>
+</head>
+<body>
+  <h4>抖音私信 AI 接待</h4>
+
+  <label>DeepSeek API Key（只存在 background，不进页面）</label>
+  <input type="password" id="key" placeholder="sk-...">
+
+  <div class="grid">
+    <div>
+      <label>Base URL</label>
+      <input type="text" id="base" placeholder="https://api.deepseek.com">
+    </div>
+    <div>
+      <label>模型</label>
+      <input type="text" id="model" placeholder="deepseek-chat">
+    </div>
+  </div>
+
+  <label>客服身份</label>
+  <input type="text" id="persona" placeholder="例如：花间集女装客服">
+
+  <label>知识库（本店事实，一行一条；没有的模型不会编）</label>
+  <textarea id="kb" rows="6" placeholder="产品：早春碎花连衣裙，现货，S/M/L&#10;价格：129 元，不议价&#10;发货：48 小时内发出，默认中通&#10;退换：7 天无理由，吊牌完好"></textarea>
+
+  <div class="grid">
+    <div>
+      <label>回复字数上限</label>
+      <input type="number" id="max" min="10" max="120" value="40">
+    </div>
+    <div>
+      <label>兜底话术</label>
+      <input type="text" id="fallback" placeholder="稍等，我确认一下再回您">
+    </div>
+  </div>
+
+  <div class="chk">
+    <input type="checkbox" id="dry" checked>
+    <label for="dry" style="margin:0">草稿模式（只生成不发送）</label>
+  </div>
+  <div class="chk">
+    <input type="checkbox" id="general" checked>
+    <label for="general" style="margin:0">知识库没有的通用问题允许模型自己答（1+1、闲聊）</label>
+  </div>
+
+  <h5>图片识别（可选）</h5>
+  <div class="chk">
+    <input type="checkbox" id="vision">
+    <label for="vision" style="margin:0">用视觉模型把对方发的图转成一句描述</label>
+  </div>
+  <div class="grid">
+    <div>
+      <label>VLM Base URL</label>
+      <input type="text" id="vbase" placeholder="https://dashscope.aliyuncs.com/compatible-mode/v1">
+    </div>
+    <div>
+      <label>VLM 模型</label>
+      <input type="text" id="vmodel" placeholder="qwen-vl-plus">
+    </div>
+  </div>
+  <label>VLM Key（留空则复用上面的 Key）</label>
+  <input type="password" id="vkey" placeholder="sk-...">
+  <div class="hint">DeepSeek 官方 API 没有视觉模型，要识别图片得换成通义千问 VL / 智谱 GLM-4V 等。</div>
+
+  <h5>语音转写（可选）</h5>
+  <div class="chk">
+    <input type="checkbox" id="asr">
+    <label for="asr" style="margin:0">把对方发的语音转成文字再回答</label>
+  </div>
+  <div class="grid">
+    <div>
+      <label>ASR Base URL</label>
+      <input type="text" id="abase" placeholder="https://api.openai.com/v1">
+    </div>
+    <div>
+      <label>ASR 模型</label>
+      <input type="text" id="amodel" placeholder="whisper-1">
+    </div>
+  </div>
+  <label>ASR Key（留空则复用上面的 Key）</label>
+  <input type="password" id="akey" placeholder="sk-...">
+  <div class="hint">走 OpenAI 兼容的 /audio/transcriptions：OpenAI whisper-1、Groq whisper-large-v3、硅基流动 SenseVoiceSmall、本地 faster-whisper（http://127.0.0.1:8000/v1）都行。</div>
+
+  <h5>本地资料库（狗头军师）</h5>
+  <div class="chk">
+    <input type="checkbox" id="kbret" checked>
+    <label for="kbret" style="margin:0">按对话内容自动检索资料（交易类问题自动跳过）</label>
+  </div>
+  <div id="kbBar">读取中…</div>
+  <div class="row">
+    <input type="text" id="kbq" placeholder="试搜：她三天没回我消息" style="flex:2">
+    <button class="mini" id="kbTest" style="flex:1">试搜</button>
+  </div>
+  <div id="kbOut" style="margin-top:6px;font-size:11px;color:#666;white-space:pre-wrap"></div>
+
+  <h5>高级</h5>
+  <label>只对这些用户生效（白名单，逗号分隔的会话 ID 或昵称 hash；<b>留空 = 全部</b>）</label>
+  <input type="text" id="allowIds" placeholder="上线测试时建议先填你小号的 ID">
+  <label>消息区 CSS 选择器（可选。读不到对话时，把面板探测结果发我，我算好了填这里）</label>
+  <input type="text" id="tsel" placeholder="留空 = 自动识别">
+
+  <h5>对话记忆（IndexedDB）</h5>
+  <div id="memBar">读取中…</div>
+  <div class="row">
+    <button class="mini" id="memRefresh">刷新</button>
+    <button class="mini" id="memExport">导出 JSON</button>
+    <button class="mini" id="memClear">清空全部</button>
+  </div>
+
+  <div class="row">
+    <button id="save">保存</button>
+    <button id="test">测模型</button>
+    <button id="run">页面试跑</button>
+  </div>
+
+  <div id="out">就绪。</div>
+  <div class="hint">保存后刷新抖音页面生效。「页面试跑」会对当前未读会话跑一轮（草稿模式下不发送）。</div>
+
+<script src="popup.js"></script>
+</body>
+</html>
